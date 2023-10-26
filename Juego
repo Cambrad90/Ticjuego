@@ -1,0 +1,89 @@
+Sure, you can change the colors of the X and O symbols to green and orange. Here's the modified code with these colors:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 24px;
+            text-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+
+        .cell.X {
+            color: green;
+        }
+
+        .cell.O {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div class="board" id="board"></div>
+    <p id="message"></p>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        const cells = [];
+        let currentPlayer = 'X';
+        let gameOver = false;
+
+        // Create the board
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                cell.addEventListener('click', handleCellClick);
+                cells.push(cell);
+                board.appendChild(cell);
+            }
+        }
+
+        // Handle cell clicks
+        function handleCellClick(event) {
+            const cell = event.target;
+            if (cell.innerText === '' && !gameOver) {
+                cell.innerText = currentPlayer;
+                cell.classList.add(currentPlayer);
+                if (checkWinner()) {
+                    message.innerText = `Player ${currentPlayer} wins!`;
+                    gameOver = true;
+                } else if (isBoardFull()) {
+                    message.innerText = "It's a draw!";
+                    gameOver = true;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+
+        // Check for a win
+        function checkWinner() {
+            for (let i = 0; i < 3; i++) {
+                if (cells[i].innerText && cells[i].innerText === cells[i + 3].innerText && cells[i].innerText === cells[i + 6].innerText) {
+                    return true; // Check columns
+                }
+                if (cells[3 * i].innerText && cells[3 * i].innerText === cells[3 * i + 1].innerText && cells[3 * i].innerText === cells[3 * i + 2].innerText) {
+                    return true; // Check rows
+                }
+            }
+            if (cells[0].innerText && cells[0].innerText === cells[4].innerText && cells[0].innerText === cells[8].innerText) {
+                return true; // Check diagonal from top-left to bottom-right
+            }
+            if (cells[2].innerText && cells[2].innerText === cells[4].innerText &&
